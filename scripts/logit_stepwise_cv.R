@@ -51,13 +51,11 @@ cv_b <- cv.glm(df, backward, K=opt$kfold)$delta[1]
 # Evaluate helper
 evaluate <- function(model, df, thr=0.5, pos="1") {
   probs <- as.numeric(predict(model, newdata=df, type="response"))
-  # Make sure target is factor; set levels s.t. pos exists
   y <- df[[opt$target]]
   if (!is.factor(y)) y <- factor(y)
   if (!(pos %in% levels(y))) y <- factor(y, levels = c(levels(y), pos))
   pred <- ifelse(probs > thr, pos, setdiff(levels(y), pos)[1])
   cm <- table(actual=y, pred=pred)
-  # metrics
   acc <- sum(diag(cm)) / sum(cm)
   pos_level <- pos
   tp <- ifelse(!is.na(cm[pos_level,pos_level]), cm[pos_level,pos_level], 0)
@@ -65,7 +63,6 @@ evaluate <- function(model, df, thr=0.5, pos="1") {
   fn <- sum(cm[pos_level, setdiff(colnames(cm), pos_level)], na.rm=TRUE)
   prec <- ifelse((tp + fp) == 0, NA, tp / (tp + fp))
   rec  <- ifelse((tp + fn) == 0, NA, tp / (tp + fn))
-  # ROC/AUC
   rocobj <- try(pROC::roc(y, probs, quiet=TRUE), silent=TRUE)
   auc <- if (inherits(rocobj, "try-error")) NA else as.numeric(pROC::auc(rocobj))
   list(cm=cm, acc=acc, precision=prec, recall=rec, auc=auc)
@@ -75,15 +72,11 @@ m_f <- evaluate(forward, df, thr=opt$threshold, pos=opt$positive)
 m_b <- evaluate(backward, df, thr=opt$threshold, pos=opt$positive)
 
 dir.create("outputs", showWarnings=FALSE)
-# Save metrics
 jsonlite::write_json(list(cv_forward=m_f, cv_backward=m_b, cv_err_forward=cv_f, cv_err_backward=cv_b),
                      path="outputs/metrics.json", auto_unbox=TRUE, pretty=TRUE)
-
-# Save summaries
 capture.output(summary(forward), file="outputs/summary_forward.txt")
 capture.output(summary(backward), file="outputs/summary_backward.txt")
 
-# ROC plots
 try({
   png("outputs/roc_forward.png", width=1000, height=800, res=150)
   plot(pROC::roc(df[[opt$target]], predict(forward, type="response"), quiet=TRUE), main="ROC — Forward")
