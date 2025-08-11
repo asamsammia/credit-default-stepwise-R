@@ -1,3 +1,5 @@
+![Banner](assets/credit-default-stepwise-R.png)
+
 # Credit Default (UCI) — Stepwise Logistic (R)
 
     Final project: forward & backward stepwise logistic regression with 10‑fold CV, ROC/AUC, confusion matrix.
@@ -35,3 +37,27 @@ Confusion Matrix (30% holdout):
 
 
 ![ROC](outputs/credit_default_roc.png)
+
+
+---
+
+## How to Cite
+**APA (suggested):**  
+Samih, A. (2025). *Credit Default — Stepwise Logistic (R)*. GitHub repository. https://github.com/asamsammia/credit-default-stepwise-R
+
+**BibTeX:**
+```bibtex
+@software{Samih2025-credit-default-stepwise-R,
+  author  = {Abdul Samih},
+  title   = {Credit Default — Stepwise Logistic (R)},
+  year    = {2025},
+  url     = {https://github.com/asamsammia/credit-default-stepwise-R}
+}
+```
+
+## Limitations
+- **Class imbalance & thresholding:** Precision/recall trade‑off depends on the 0.5 threshold; tune per use‑case.
+- **Stepwise AIC instability:** Forward/backward selection can overfit or vary across folds.
+- **No cost matrix:** Equal cost for FP/FN; adjust threshold or use cost‑sensitive metrics if needed.
+- **Feature scale & collinearity:** Logistic assumes linear log‑odds; correlated features can distort inference.
+- **Generalization:** Metrics are dataset‑specific; validate on external data where possible.
