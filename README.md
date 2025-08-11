@@ -1,16 +1,37 @@
 # Credit Default (UCI) — Stepwise Logistic (R)
 
-Final project repo with your dataset included in `data/`.
+    Final project: forward & backward stepwise logistic regression with 10‑fold CV, ROC/AUC, confusion matrix.
 
-## Quickstart
-```r
-# install dependencies
-pkgs <- c("optparse","readxl","pROC","boot","dplyr")
-to_install <- pkgs[!pkgs %in% rownames(installed.packages())]
-if (length(to_install)) install.packages(to_install, repos="https://cloud.r-project.org")
+    ## Quickstart
+    ```r
+    # install
+    pkgs <- c("optparse","readxl","pROC","boot","dplyr","jsonlite")
+    to_install <- pkgs[!pkgs %in% rownames(installed.packages())]
+    if (length(to_install)) install.packages(to_install, repos="https://cloud.r-project.org")
 
-# run with the included CSV
-Rscript scripts/logit_stepwise_cv.R       --input "data/default_of_credit_card_clients.csv"       --target Y --positive 1 --kfold 10 --threshold 0.5
-```
+    # demo
+    Rscript scripts/demo.R
+    ```
 
-Outputs (ROC plots, metrics, confusion) will be written to `outputs/`.
+    ## Scripts
+    - `scripts/logit_stepwise_cv.R` — stepwise (AIC), CV, ROC/AUC, confusion
+    - `scripts/demo.R` — synthetic demo so CI always runs green
+
+    ---
+
+    ## Results
+    ### Results — Credit Default (Final)
+- Test samples: **9000**
+- ROC AUC: **0.716**
+- Accuracy: **0.684**
+- Precision (Positive=1): **0.373**
+- Recall (Positive=1): **0.628**
+
+Confusion Matrix (30% holdout):
+|        | Pred 0 | Pred 1 |
+|--------|--------|--------|
+| **Actual 0** | 4902 | 2107 |
+| **Actual 1** | 740 | 1251 |
+
+
+![ROC](outputs/credit_default_roc.png)
